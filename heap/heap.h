@@ -10,8 +10,8 @@
 typedef int (*heap_comparador)(void*, void*);
 
 /*
- * Destructor de elementos. Cada vez que un elemento deja el heap
- * se invoca al destructor pasandole el elemento.
+ * Destructor de elementos. Cada vez que un elemento deja el heap por destrucción
+ * del heap, se invoca al destructor pasandole el elemento.
  */
 typedef void (*heap_liberar_elemento)(void*);
 
@@ -27,5 +27,11 @@ heap_t* heap_crear(heap_comparador comparador, heap_liberar_elemento destructor)
 int heap_insertar(heap_t* heap, void* elemento);
 
 void* heap_extraer_raiz(heap_t* heap);
+
+void* heap_raiz(heap_t* heap);
+
+int heap_cantidad(heap_t* heap);
+
+void heap_destruir(heap_t* heap);
 
 #endif
