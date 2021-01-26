@@ -1,5 +1,4 @@
 #include "heap.h"
-
 #define ERROR -1
 #define EXITO 0
 
@@ -44,8 +43,8 @@ void sift_up(heap_t* heap, int n){
 
 int heap_insertar(heap_t* heap, void* elemento){
   if(!heap)
-    return NULL;
-  void* aux = realloc(heap->vector, sizeof(int)*(heap->tope+1));
+    return ERROR;
+  void* aux = realloc(heap->vector, sizeof(void*)*(size_t)(heap->tope+1));
   if(!aux)
     return ERROR;
   heap->vector = aux;
