@@ -26,7 +26,7 @@ heap_t* heap_crear(heap_comparador comparador, heap_liberar_elemento destructor)
 
 int heap_insertar(heap_t* heap, void* elemento);
 
-void* heap_extraer_raiz(heap_t* heap);
+void heap_extraer_raiz(heap_t* heap);
 
 void* heap_raiz(heap_t* heap);
 

@@ -1,28 +1,55 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "juego.h"
+#include "menu_inicio.h"
 
 
 #define EXITO 0
 #define ERROR -1
 
-#define ACTUALIZAR_PERSONAJE 'E'
-#define AGREGA_GIMNASIO 'A'
-#define COMIENZA_PARTIDA_INTERACTIVA 'I'
-#define SIMULA_PARTIDA 'S'
-
-bool destructor_pokemon_lista(pokemon_t* pokemon){
+bool destructor_pokemon_lista(void* pokemon, void* contexto){
+  contexto = NULL;
   if(pokemon)
     free(pokemon);
   return true;
 }
 
-void destruir_pokemon(pokemon_t* pokemon){
+bool destructor_entrenador_lista(void* entrenador, void* contexto){
+  contexto = NULL;
+  if(entrenador)
+    lista_con_cada_elemento(((entrenador_t*)(entrenador))->pokemones, destructor_pokemon_lista, NULL);
+  free(entrenador);
+  return true;
+}
+
+void destruir_pokemon(void* pokemon){
   if(pokemon)
     free(pokemon);
 }
 
-int comparar_pokemones(pokemon_t* primero, pokemon_t* segundo){
-  return(strcmp(primero->nombre, segundo->nombre));
+int comparar_pokemones(void* primero, void* segundo){
+  if(!primero || !segundo)
+    return 0;
+  return(strcmp(((pokemon_t*)(primero))->nombre, ((pokemon_t*)(segundo))->nombre));
+}
+
+int comparar_gimnasios(void* primero, void* segundo){
+  gimnasio_t* gim_1 = (gimnasio_t*)primero;
+  gimnasio_t* gim_2 = (gimnasio_t*)segundo;
+  return (int)(gim_2->dificultad - gim_1->dificultad);
+}
+
+void destruir_gimnasio(void* gimnasio){
+  gimnasio_t* gim = (gimnasio_t*)gimnasio;
+
+  if(gimnasio){
+    lista_con_cada_elemento(gim->entrenadores, destructor_entrenador_lista, NULL);
+    lista_destruir(gim->entrenadores);
+    lista_con_cada_elemento(gim->lider.pokemones, destructor_pokemon_lista, NULL);
+    lista_destruir(gim->lider.pokemones);
+  }
+  free(gimnasio);
 }
 
 void mostrar_mensaje_inicial(){

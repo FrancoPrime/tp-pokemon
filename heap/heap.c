@@ -73,16 +73,16 @@ void sift_down(heap_t* heap, int n){
   }
 }
 
-void* heap_extraer_raiz(heap_t* heap){
+void heap_extraer_raiz(heap_t* heap){
   if(!heap || heap->tope == 0)
-    return NULL;
+    return;
   void* elemento = heap->vector[0];
   heap->vector[0] = heap->vector[heap->tope-1];
   heap->tope--;
   if(heap->tope != 0)
     sift_down(heap, 0);
-
-  return elemento;
+  if(heap->destructor)
+    heap->destructor(elemento);
 }
 
 void* heap_raiz(heap_t* heap){
@@ -105,8 +105,8 @@ void heap_destruir(heap_t* heap){
     free(heap);
     return;
   }
-  void* elemento = heap_extraer_raiz(heap);
   if(heap->destructor)
-    heap->destructor(elemento);
+    heap->destructor(heap_raiz(heap));
+  heap_extraer_raiz(heap);
   heap_destruir(heap);
 }
