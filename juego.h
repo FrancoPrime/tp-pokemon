@@ -18,7 +18,7 @@ typedef struct pokemon{
 
 typedef struct entrenador{
   char nombre[MAX_NOMBRE];
-  lista_t* pokemones;
+  lista_t* pokemones;//Cola
 } entrenador_t;
 
 typedef struct gimnasio{
@@ -26,12 +26,12 @@ typedef struct gimnasio{
   int dificultad;
   int id_puntero_funcion;
   entrenador_t lider;
-  lista_t* entrenadores;
+  lista_t* entrenadores; //Pila
 } gimnasio_t;
 
 typedef struct personaje{
   char nombre[MAX_NOMBRE];
-  lista_t* pokemones_combate;
+  lista_t* pokemones_combate; //Cola
   abb_t* pokemones_reserva;
 } personaje_t;
 
@@ -41,6 +41,8 @@ typedef struct partida{
 } partida_t;
 
 void jugar();
-
+void destruir_pokemon(pokemon_t* pokemon);
+bool destructor_pokemon_lista(pokemon_t* pokemon);
+int comparar_pokemones(pokemon_t* primero, pokemon_t* segundo);
 
 #endif
