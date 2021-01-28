@@ -4,6 +4,8 @@
 #include "juego.h"
 #include "menu_inicio.h"
 
+#define JUGAR 1
+#define SIMULAR 2
 
 #define EXITO 0
 #define ERROR -1
@@ -62,5 +64,11 @@ void mostrar_mensaje_inicial(){
 void jugar(){
   mostrar_mensaje_inicial();
   partida_t partida;
-  menu_inicio(&partida);
+  int accion = menu_inicio(&partida);
+  if(accion == JUGAR){
+    menu_gimnasio(&partida);
+  }
+  else if(accion == SIMULAR){
+
+  }
 }

@@ -1,9 +1,9 @@
 #include "menu_inicio.h"
 #include <stdio.h>
-#define FORMATO_POKEMON "P;%100[^;];%i;%i;%i;\n"
-#define FORMATO_LIDER "L;%100[^;];\n"
-#define FORMATO_ENTRENADOR "E;%100[^;];\n"
-#define FORMATO_GIMNASIO "G;%100[^;];%i;%i;\n"
+#define FORMATO_POKEMON "P;%100[^;];%i;%i;%i\n"
+#define FORMATO_LIDER "L;%100[^\n]\n"
+#define FORMATO_ENTRENADOR "E;%100[^\n]\n"
+#define FORMATO_GIMNASIO "G;%100[^;];%i;%i\n"
 
 #define CANTIDAD_LEIDOS_POKEMON 4
 #define CANTIDAD_LEIDOS_NOMBRE 1
@@ -24,6 +24,8 @@
 #define ERROR -1
 #define EXITO 0
 
+#define JUGAR 1
+#define SIMULAR 2
 
 FILE* leer_archivo(char* mensaje){
   char nombre_archivo[MAX_NOMBRE_ARCHIVO];
@@ -264,7 +266,7 @@ int agregar_gimnasio(partida_t* partida){
   return EXITO;
 }
 
-void menu_inicio(partida_t* partida){
+int menu_inicio(partida_t* partida){
   printf("|-------| Menú de Inicio |-------|\n");
   printf("*Opciones:\n");
   printf("E: Ingresar el entrenador principal\n");
@@ -276,21 +278,21 @@ void menu_inicio(partida_t* partida){
   {
     case ACTUALIZAR_PERSONAJE:
       actualizar_personaje(partida);
-      menu_inicio(partida);
+      return menu_inicio(partida);
     break;
     case AGREGA_GIMNASIO:
       agregar_gimnasio(partida);
-      menu_inicio(partida);
+      return menu_inicio(partida);
     break;
     case COMIENZA_PARTIDA_INTERACTIVA:
-      printf("Ingresaste I");
+      return JUGAR;
     break;
     case SIMULA_PARTIDA:
-      printf("Ingresaste S");
+      return SIMULAR;
     break;
     default:
       system("clear");
-      menu_inicio(partida);
+      return menu_inicio(partida);
     break;
   }
 }

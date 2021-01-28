@@ -4,8 +4,6 @@
 
 #define MAX_NOMBRE_ARCHIVO 100
 
-#define ID_ENTRENADOR 'E'
-
-void menu_inicio(partida_t* partida);
+int menu_inicio(partida_t* partida);
 
 #endif
