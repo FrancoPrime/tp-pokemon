@@ -3,12 +3,7 @@
 #include <string.h>
 #include "juego.h"
 #include "menu_inicio.h"
-
-#define JUGAR 1
-#define SIMULAR 2
-
-#define EXITO 0
-#define ERROR -1
+#include "menu_gimnasio.h"
 
 bool destructor_pokemon_lista(void* pokemon, void* contexto){
   contexto = NULL;
@@ -61,9 +56,29 @@ void mostrar_mensaje_inicial(){
   printf("a los pokemones mas fuertes para tu colección.\n\n");
 }
 
+void inicializar_partida(partida_t* partida){
+  heap_t* gimnasios = heap_crear(comparar_gimnasios, destruir_gimnasio);
+  if(!gimnasios)
+    return;
+  partida->gimnasios = gimnasios;
+  partida->personaje.pokemones_combate = lista_crear();
+  if(!partida->personaje.pokemones_combate)
+  {
+    free(gimnasios);
+    return;
+  }
+  partida->personaje.pokemones_reserva = arbol_crear(comparar_pokemones, destruir_pokemon);
+  if(!partida->personaje.pokemones_reserva)
+  {
+    free(gimnasios);
+    free(partida->personaje.pokemones_combate);
+  }
+}
+
 void jugar(){
   mostrar_mensaje_inicial();
   partida_t partida;
+  inicializar_partida(&partida);
   int accion = menu_inicio(&partida);
   if(accion == JUGAR){
     menu_gimnasio(&partida);

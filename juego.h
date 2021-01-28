@@ -7,7 +7,15 @@
 #include "lista/lista.h"
 #include "heap/heap.h"
 
+#define MAX_POKEMONES_COMBATE 6
 #define MAX_NOMBRE 100
+#define MAX_POKEMONES 200
+
+#define EXITO 0
+#define ERROR -1
+
+#define JUGAR 1
+#define SIMULAR 2
 
 typedef struct pokemon{
   char nombre[MAX_NOMBRE];

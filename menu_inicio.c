@@ -18,14 +18,7 @@
 #define COMIENZA_PARTIDA_INTERACTIVA 'I'
 #define SIMULA_PARTIDA 'S'
 
-#define MAX_POKEMONES_COMBATE 6
 #define MAX_NOMBRE 100
-
-#define ERROR -1
-#define EXITO 0
-
-#define JUGAR 1
-#define SIMULAR 2
 
 FILE* leer_archivo(char* mensaje){
   char nombre_archivo[MAX_NOMBRE_ARCHIVO];
@@ -267,12 +260,12 @@ int agregar_gimnasio(partida_t* partida){
 }
 
 int menu_inicio(partida_t* partida){
-  printf("|-------| Menú de Inicio |-------|\n");
-  printf("*Opciones:\n");
-  printf("E: Ingresar el entrenador principal\n");
-  printf("A: Agregar un gimnasio a la partida\n");
-  printf("I: Comenzar la partida\n");
-  printf("S: Simular la partida\n");
+  printf("|-------| Menú de Inicio |-------|\n\n");
+  printf("|*| Opciones:\n");
+  printf("\tE: Ingresar el entrenador principal\n");
+  printf("\tA: Agregar un gimnasio a la partida\n");
+  printf("\tI: Comenzar la partida\n");
+  printf("\tS: Simular la partida\n");
   char caracter = (char)getchar();
   switch(caracter)
   {
