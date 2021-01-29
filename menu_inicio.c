@@ -116,7 +116,7 @@ int leer_pokemones_personaje(FILE* archivo, personaje_t* personaje){
 }
 
 int actualizar_personaje(partida_t* partida){
-  FILE* archivo =  leer_archivo("Ingrese la ruta del archivo del personaje: ");
+  FILE* archivo = fopen("ent.txt", "r");// leer_archivo("Ingrese la ruta del archivo del personaje: ");
   if(!archivo){
     return ERROR;
   }
@@ -145,7 +145,7 @@ int actualizar_personaje(partida_t* partida){
   }
 
   int resultado = leer_pokemones_personaje(archivo, (void*)(&(partida->personaje)));
-
+  system("clear");
   if(resultado == ERROR){
     printf("Ocurrió un error al intentar cargar los pokemones\n");
   } else {
@@ -188,7 +188,7 @@ int leer_informacion_gim(FILE* archivo, gimnasio_t* gim)
 }
 
 int agregar_gimnasio(partida_t* partida){
-  FILE* archivo = leer_archivo("Ingrese la ruta del archivo del gimnasio: ");
+  FILE* archivo = fopen("gim.txt", "r");//leer_archivo("Ingrese la ruta del archivo del gimnasio: ");
   if(!archivo){
     return ERROR;
   }
@@ -255,6 +255,7 @@ int agregar_gimnasio(partida_t* partida){
 
   heap_insertar(partida->gimnasios, (void*)nuevo_gim);
   fclose(archivo);
+  system("clear");
   printf("Exito al añadir gimnasio\n");
   return EXITO;
 }
@@ -266,26 +267,33 @@ int menu_inicio(partida_t* partida){
   printf("\tA: Agregar un gimnasio a la partida\n");
   printf("\tI: Comenzar la partida\n");
   printf("\tS: Simular la partida\n");
-  char caracter = (char)getchar();
-  switch(caracter)
+  printf("\tX: Salir\n");
+  char caracter;
+  do
   {
-    case ACTUALIZAR_PERSONAJE:
-      actualizar_personaje(partida);
-      return menu_inicio(partida);
-    break;
-    case AGREGA_GIMNASIO:
-      agregar_gimnasio(partida);
-      return menu_inicio(partida);
-    break;
-    case COMIENZA_PARTIDA_INTERACTIVA:
-      return JUGAR;
-    break;
-    case SIMULA_PARTIDA:
-      return SIMULAR;
-    break;
-    default:
-      system("clear");
-      return menu_inicio(partida);
-    break;
-  }
+    caracter = (char)getchar();
+    switch(caracter){
+      case ACTUALIZAR_PERSONAJE:
+        actualizar_personaje(partida);
+        return menu_inicio(partida);
+      break;
+      case AGREGA_GIMNASIO:
+        agregar_gimnasio(partida);
+        return menu_inicio(partida);
+      break;
+      case COMIENZA_PARTIDA_INTERACTIVA:
+        caracter = JUGAR;
+      break;
+      case SIMULA_PARTIDA:
+        caracter = SIMULAR;
+      break;
+      case SALIR_PARTIDA:
+        caracter = SALIR;
+      break;
+      default:
+        caracter = ENTER;
+      break;
+    }
+  } while(caracter == ENTER);
+  return (int)caracter;
 }

@@ -1,8 +1,10 @@
 #ifndef _JUEGO_H_
 #define _JUEGO_H_
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "arbol/abb.h"
 #include "lista/lista.h"
 #include "heap/heap.h"
@@ -14,6 +16,9 @@
 #define EXITO 0
 #define ERROR -1
 
+#define ENTER '\n'
+#define SALIR_PARTIDA 'X'
+#define SALIR 0
 #define JUGAR 1
 #define SIMULAR 2
 

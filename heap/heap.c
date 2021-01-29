@@ -105,8 +105,6 @@ void heap_destruir(heap_t* heap){
     free(heap);
     return;
   }
-  if(heap->destructor)
-    heap->destructor(heap_raiz(heap));
   heap_extraer_raiz(heap);
   heap_destruir(heap);
 }

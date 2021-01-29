@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "juego.h"
 #include "menu_inicio.h"
 #include "menu_gimnasio.h"
@@ -16,6 +13,7 @@ bool destructor_entrenador_lista(void* entrenador, void* contexto){
   contexto = NULL;
   if(entrenador)
     lista_con_cada_elemento(((entrenador_t*)(entrenador))->pokemones, destructor_pokemon_lista, NULL);
+  lista_destruir(((entrenador_t*)(entrenador))->pokemones);
   free(entrenador);
   return true;
 }
@@ -50,6 +48,7 @@ void destruir_gimnasio(void* gimnasio){
 }
 
 void mostrar_mensaje_inicial(){
+  system("clear");
   printf("|-------| ¡Bienvenido a Aventura Pokemon! |-------|\n");
   printf("En este juego podrás poner a prueba tus habilidades como\n");
   printf("entrenador pokemon. Derrota los diversos gimnasios y obten\n");
@@ -75,15 +74,23 @@ void inicializar_partida(partida_t* partida){
   }
 }
 
+void destruir_partida(partida_t* partida){
+arbol_destruir(partida->personaje.pokemones_reserva);
+lista_destruir(partida->personaje.pokemones_combate);
+heap_destruir(partida->gimnasios);
+}
+
 void jugar(){
   mostrar_mensaje_inicial();
   partida_t partida;
   inicializar_partida(&partida);
   int accion = menu_inicio(&partida);
+  system("clear");
   if(accion == JUGAR){
     menu_gimnasio(&partida);
   }
   else if(accion == SIMULAR){
 
   }
+  destruir_partida(&partida);
 }
