@@ -8,6 +8,10 @@
 #include "arbol/abb.h"
 #include "lista/lista.h"
 #include "heap/heap.h"
+#include "batallas/batallas.h"
+
+#define PERDIO -1
+#define GANO 0
 
 #define MAX_POKEMONES_COMBATE 6
 #define MAX_NOMBRE 100

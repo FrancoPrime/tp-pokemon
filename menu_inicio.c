@@ -48,7 +48,7 @@ entrenador_t* agregar_entrenador(gimnasio_t* gim, char* linea)
     free(entrenador);
     return NULL;
   }
-  lista_apilar(gim->entrenadores, (void*)entrenador);
+  lista_insertar(gim->entrenadores, (void*)entrenador);
   return entrenador;
 }
 
@@ -107,7 +107,7 @@ int leer_pokemones_personaje(FILE* archivo, personaje_t* personaje){
   while((un_pokemon = pokemon_leer_de_archivo(archivo)) != NULL)
   {
     if(personaje->pokemones_combate->cantidad < MAX_POKEMONES_COMBATE)
-      lista_encolar(personaje->pokemones_combate, un_pokemon);
+      lista_insertar(personaje->pokemones_combate, un_pokemon);
     arbol_insertar(personaje->pokemones_reserva, un_pokemon);
   }
   if(arbol_vacio(personaje->pokemones_reserva))

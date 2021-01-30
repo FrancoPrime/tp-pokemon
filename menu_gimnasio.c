@@ -109,7 +109,7 @@ void menu_gimnasio(partida_t* partida){
         menu_gimnasio(partida);
       break;
       case BATALLAR:
-        //
+        int resultado = batallar(partida);
       break;
       case SALIR_PARTIDA:
       caracter = SALIR;
