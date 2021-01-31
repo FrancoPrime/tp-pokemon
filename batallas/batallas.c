@@ -31,6 +31,15 @@ int funcion_batalla_5(void* pkm_1, void* pkm_2){
   return((primero->ataque > segundo->defensa) ? GANO_PRIMERO : GANO_SEGUNDO);
 }
 
+void aumentar_estadisticas(pokemon_t* pokemon){
+  if(pokemon->velocidad < MAX_PUNTOS_HABILIDADES)
+    (pokemon->velocidad)++;
+  if(pokemon->ataque < MAX_PUNTOS_HABILIDADES)
+    (pokemon->ataque)++;
+  if(pokemon->defensa < MAX_PUNTOS_HABILIDADES)
+    (pokemon->defensa)++;
+}
+
 void imprimir_pokemon(pokemon_t* pokemon){
   printf("|======================================|\n");
   printf("Información del pokemón\n");
@@ -63,14 +72,17 @@ int pelear_contra_entrenador(lista_t* aliados, lista_t* enemigos, int id_puntero
   while(pokemon_a_derrotar != NULL && pokemon_peleando != NULL){
     int resultado = funcion_batalla[id_puntero-1]((void*)pokemon_peleando, (void*)pokemon_a_derrotar);
     if(!(simulacion)){
-    system("clear");
+      printf("Tu pokemon:\n");
       imprimir_pokemon(pokemon_a_derrotar);
+      printf("Pokemon rival:\n");
       imprimir_pokemon(pokemon_peleando);
       mostrar_resultado(resultado);
+      system("clear");
     }
     if(resultado == GANO_PRIMERO){
       lista_desencolar(enemigos);
       pokemon_a_derrotar = lista_primero(enemigos);
+      aumentar_estadisticas(pokemon_peleando);
     }else{
       lista_desencolar(aliados);
       pokemon_peleando = lista_primero(aliados);
@@ -101,6 +113,8 @@ int pelear_contra_entrenadores(partida_t* partida, gimnasio_t* gimnasio){
       posicion++;
       pokemon = lista_elemento_en_posicion(partida->personaje.pokemones_combate, posicion);
     }
+    if(!partida->simulacion)
+      printf("Pelea entre %s y %s:\n", partida->personaje.nombre, entrenador->nombre);
     int resultado = pelear_contra_entrenador(cola_aliados, cola_enemigos, gimnasio->id_puntero_funcion, partida->simulacion);
     lista_destruir(cola_enemigos);
     lista_destruir(cola_aliados);
@@ -108,6 +122,7 @@ int pelear_contra_entrenadores(partida_t* partida, gimnasio_t* gimnasio){
       return PERDIO;
     lista_con_cada_elemento(entrenador->pokemones, destructor_pokemon_lista, NULL);
     lista_destruir(entrenador->pokemones);
+    free(entrenador);
     lista_desapilar(gimnasio->entrenadores);
     return pelear_contra_entrenadores(partida, gimnasio);
 }

@@ -4,8 +4,7 @@
 
 bool destructor_pokemon_lista(void* pokemon, void* contexto){
   contexto = NULL;
-  if(pokemon)
-    free(pokemon);
+  free(pokemon);
   return true;
 }
 
@@ -49,10 +48,22 @@ void destruir_gimnasio(void* gimnasio){
 
 void mostrar_mensaje_inicial(){
   system("clear");
-  printf("|-------| ¡Bienvenido a Aventura Pokemon! |-------|\n");
+  printf(ANSI_COLOR_BLUE "|-------| ¡Bienvenido a Aventura Pokemon! |-------|\n");
   printf("En este juego podrás poner a prueba tus habilidades como\n");
   printf("entrenador pokemon. Derrota los diversos gimnasios y obten\n");
-  printf("a los pokemones mas fuertes para tu colección.\n\n");
+  printf("a los pokemones mas fuertes para tu colección.\n\n" ANSI_COLOR_RESET);
+  printf("                                  ,'\n");
+  printf("    _.----.        ____         ,'  _\\   ___    ___     ____\n");
+  printf("_,-'       `.     |    |  /`.   \\,-'    |   \\  /   |   |    \\  |`.\n");
+  printf("\\      __    \\    '-.  | /   `.  ___    |    \\/    |   '-.   \\ |  |\n");
+  printf(" \\.    \\ \\   |  __  |  |/    ,','_  `.  |          | __  |    \\|  |\n");
+  printf("   \\    \\/   /,' _`.|      ,' / / / /   |          ,' _`.|     |  |\n");
+  printf("    \\     ,-'/  /   \\    ,'   | \\/ / ,`.|         /  /   \\  |     |\n");
+  printf("     \\    \\ |   \\_/  |   `-.  \\    `'  /|  |    ||   \\_/  | |\\    |\n");
+  printf("      \\    \\ \\      /       `-.`.___,-' |  |\\  /| \\      /  | |   |\n");
+  printf("       \\    \\ `.__,'|  |`-._    `|      |__| \\/ |  `.__,'|  | |   |\n");
+  printf("        \\_.-'       |__|    `-._ |              '-.|     '-.| |   |\n");
+  printf("                                `'                            '-._|\n");
 }
 
 void inicializar_partida(partida_t* partida){
@@ -88,11 +99,18 @@ void jugar(){
   int accion = menu_inicio(&partida);
   system("clear");
   if(accion == JUGAR){
-    menu_gimnasio(&partida);
+    if(heap_raiz(partida.gimnasios) == NULL || lista_vacia(partida.personaje.pokemones_combate))
+      printf("Error: No se cargaron datos suficientes para iniciar la partida\n");
+    else
+      menu_gimnasio(&partida);
   }
   else if(accion == SIMULAR){
-    partida.simulacion = true;
-    menu_gimnasio(&partida);
+    if(heap_raiz(partida.gimnasios) == NULL || lista_vacia(partida.personaje.pokemones_combate))
+      printf("Error: No se cargaron datos suficientes para iniciar la partida\n");
+    else{
+      partida.simulacion = true;
+      menu_gimnasio(&partida);
+    }
   }
   destruir_partida(&partida);
 }

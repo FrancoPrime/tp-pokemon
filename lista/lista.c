@@ -1,6 +1,5 @@
 #include "lista.h"
 #include <stdlib.h>
-#include <stdio.h>
 #define EXITO 0
 #define ERROR -1
 

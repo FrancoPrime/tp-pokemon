@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "menu_gimnasio.h"
 
 #define VER_ENTRENADOR 'E'
@@ -12,11 +11,24 @@
 #define VOLVER_GIMNASIO 1
 #define FINALIZAR_PARTIDA -1
 
+#define POKEMON_EN_USO "NO"
+
 bool imprimir_pokemon_lista(void* pokemon, void* contexto){
   pokemon_t* pkm = (pokemon_t*)pokemon;
   printf("\t%li-%s Vel: %i Def: %i Att: %i\n", *(size_t*)contexto, pkm->nombre, pkm->velocidad, pkm->defensa, pkm->ataque);
   (*(size_t*)contexto)++;
   return true;
+}
+
+bool busqueda_de_pokemon(void* pokemon, void* contexto){
+  if(!contexto)
+    return false;
+  pokemon_t* seleccionado = (pokemon_t*)contexto;
+  pokemon_t* actual = (pokemon_t*)pokemon;
+  if (strcmp(seleccionado->nombre, actual->nombre) != 0)
+    return true;
+  strcpy(seleccionado->nombre, POKEMON_EN_USO);
+  return false;
 }
 
 void mostrar_entrenador(partida_t* partida){
@@ -47,6 +59,12 @@ void mostrar_gimnasio(partida_t* partida){
 
 void seleccionar_slot_de_cambio(partida_t* partida, pokemon_t* pokemon){
   system("clear");
+  pokemon_t seleccionado = *pokemon;
+  lista_con_cada_elemento(partida->personaje.pokemones_combate, busqueda_de_pokemon, (void*)&seleccionado);
+  if(strcmp(seleccionado.nombre, POKEMON_EN_USO) == 0){
+    printf("Este pokemon ya está en tu lista de combate\n");
+    return;
+  }
   printf("Has seleccionado a %s\n", pokemon->nombre);
   printf("Ahora escribe el numero de slot del pokemon por el cual deseas cambiarlo:\n");
   size_t id=1;
@@ -117,8 +135,8 @@ void tomar_pokemon_prestado(partida_t* partida){
 }
 
 void menu_victoria(partida_t* partida, bool puede_tomar_prestado){
-  printf("|====| Menú de victoria |======|\n\n");
-  printf("\t¡Gimnasio derrotado!\n");
+  printf(ANSI_COLOR_GREEN"|====| Menú de victoria |======|\n\n");
+  printf("\t¡Gimnasio derrotado!\n" ANSI_COLOR_RESET);
   printf("Enhorabuena, añadiste una medalla a tu colección.\n");
   printf("|*| Ingrese alguna de las siguientes opciones:\n");
   if(puede_tomar_prestado)
@@ -154,8 +172,8 @@ void menu_victoria(partida_t* partida, bool puede_tomar_prestado){
 }
 
 int menu_derrota(partida_t* partida){
-  printf("|====| Menú de derrota |======|\n\n");
-  printf("\tLa proxima tal vez :(\n");
+  printf(ANSI_COLOR_RED "|====| Menú de derrota |======|\n\n");
+  printf("\tLa proxima tal vez :(\n" ANSI_COLOR_RESET);
   printf("Puedes volver a intentarlo, pero antes...\n");
   printf("|*| Ingrese alguna de las siguientes opciones:\n");
   printf("\tC: Cambiar los pokemones de batalla\n");
@@ -196,7 +214,7 @@ void mostrar_derrota_simulada(partida_t* partida){
   system("clear");
   gimnasio_t* gimnasio = heap_raiz(partida->gimnasios);
   printf("Que lastima %s\n", partida->personaje.nombre);
-  printf("Parece que has perdido en el gimnasio %s\n", gimnasio->nombre);
+  printf("Parece que has perdido en: %s\n", gimnasio->nombre);
   printf("Pokemones que utilizaste:\n");
   size_t id=1;
   lista_con_cada_elemento(partida->personaje.pokemones_combate, imprimir_pokemon_lista, (void*)&id);

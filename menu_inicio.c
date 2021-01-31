@@ -116,7 +116,7 @@ int leer_pokemones_personaje(FILE* archivo, personaje_t* personaje){
 }
 
 int actualizar_personaje(partida_t* partida){
-  FILE* archivo = fopen("ent.txt", "r");// leer_archivo("Ingrese la ruta del archivo del personaje: ");
+  FILE* archivo = leer_archivo("Ingrese la ruta del archivo del personaje: ");//fopen("ent.txt", "r");
   if(!archivo){
     return ERROR;
   }
@@ -127,7 +127,6 @@ int actualizar_personaje(partida_t* partida){
     return ERROR;
   }
 
-  //lista_con_cada_elemento(partida->personaje.pokemones_combate, destructor_pokemon_lista, NULL);
   lista_destruir(partida->personaje.pokemones_combate);
   partida->personaje.pokemones_combate = lista_crear();
 
@@ -188,7 +187,7 @@ int leer_informacion_gim(FILE* archivo, gimnasio_t* gim)
 }
 
 int agregar_gimnasio(partida_t* partida){
-  FILE* archivo = fopen("gim.txt", "r");//leer_archivo("Ingrese la ruta del archivo del gimnasio: ");
+  FILE* archivo = leer_archivo("Ingrese la ruta del archivo del gimnasio: ");//fopen("gim.txt", "r");
   if(!archivo){
     return ERROR;
   }
@@ -261,7 +260,7 @@ int agregar_gimnasio(partida_t* partida){
 }
 
 int menu_inicio(partida_t* partida){
-  printf("|-------| Menú de Inicio |-------|\n\n");
+  printf("|-------| Menú de Inicio |-------|\n");
   printf("|*| Opciones:\n");
   printf("\tE: Ingresar el entrenador principal\n");
   printf("\tA: Agregar un gimnasio a la partida\n");

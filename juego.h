@@ -10,12 +10,18 @@
 #include "heap/heap.h"
 #include "batallas/batallas.h"
 
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_BLUE    "\x1b[34m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+
 #define PERDIO -1
 #define GANO 0
 
 #define MAX_POKEMONES_COMBATE 6
 #define MAX_NOMBRE 100
 #define MAX_POKEMONES 200
+#define MAX_PUNTOS_HABILIDADES 63
 
 #define EXITO 0
 #define ERROR -1
