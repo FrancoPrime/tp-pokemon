@@ -1,5 +1,6 @@
 #include "lista.h"
 #include <stdlib.h>
+#include <stdio.h>
 #define EXITO 0
 #define ERROR -1
 
@@ -55,12 +56,13 @@ int lista_insertar(lista_t* lista, void* elemento){
     return ERROR;
   if(lista->cantidad == 0)
     return lista_insertar_inicio(lista, elemento);
-  nodo_t* nodo_nuevo = malloc(sizeof(nodo_t));
+  nodo_t* nodo_nuevo = calloc(1,sizeof(nodo_t));
   if(!nodo_nuevo)
     return ERROR;
   nodo_nuevo->siguiente = NULL;
   nodo_nuevo->elemento = elemento;
-  lista->nodo_fin->siguiente = nodo_nuevo;
+  nodo_t* nodito = lista->nodo_fin;
+  nodito->siguiente = nodo_nuevo;
   lista->nodo_fin = nodo_nuevo;
   lista->cantidad += 1;
   return EXITO;
@@ -119,7 +121,7 @@ int lista_borrar(lista_t* lista){
 int lista_borrar_de_posicion(lista_t* lista, size_t posicion){
   if(!lista)
     return ERROR;
-  if(lista->cantidad < posicion+1 || lista->cantidad == 1)
+  if(lista->cantidad <= posicion+1 || lista->cantidad == 1)
     return lista_borrar(lista);
   if(posicion == 0)
   {

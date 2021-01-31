@@ -5,6 +5,12 @@
 #define VER_GIMNASIO_ACTUAL 'G'
 #define CAMBIAR_POKEMONES 'C'
 #define BATALLAR 'B'
+#define TOMAR_PRESTADO 'T'
+#define AVANZAR 'N'
+#define CARACTER_VOLVER 'R'
+#define CARACTER_FINALIZAR 'F'
+#define VOLVER_GIMNASIO 1
+#define FINALIZAR_PARTIDA -1
 
 bool imprimir_pokemon_lista(void* pokemon, void* contexto){
   pokemon_t* pkm = (pokemon_t*)pokemon;
@@ -45,14 +51,17 @@ void seleccionar_slot_de_cambio(partida_t* partida, pokemon_t* pokemon){
   printf("Ahora escribe el numero de slot del pokemon por el cual deseas cambiarlo:\n");
   size_t id=1;
   lista_con_cada_elemento(partida->personaje.pokemones_combate, imprimir_pokemon_lista, (void*)&id);
-  int slot;
-  scanf("%i", &slot);
-  if(slot < 0 || slot > MAX_POKEMONES_COMBATE)
+  size_t slot;
+  scanf("%zu", &slot);
+  if(slot < 1 || slot > MAX_POKEMONES_COMBATE+2)
     return;
-  lista_borrar_de_posicion(partida->personaje.pokemones_combate, (size_t)(slot-1));
-  lista_insertar_en_posicion(partida->personaje.pokemones_combate, (void*)pokemon, (size_t)(slot-1));
+  lista_borrar_de_posicion(partida->personaje.pokemones_combate, (slot-1));
+  int resultado = lista_insertar_en_posicion(partida->personaje.pokemones_combate, (void*)pokemon, (slot-1));
   system("clear");
-  printf("Exito al cambiar pokemones\n");
+  if(resultado == EXITO)
+    printf("Exito al cambiar pokemones\n");
+  else
+    printf("Error al cambiar pokemones\n");
 }
 
 void cambiar_pokemones(partida_t* partida){
@@ -82,7 +91,133 @@ void cambiar_pokemones(partida_t* partida){
   seleccionar_slot_de_cambio(partida, pokemon_buscado);
 }
 
+pokemon_t* elegir_pokemon_del_lider(lista_t* pokemones){
+  system("clear");
+  printf("|========| Elige el pokemon que quieras tomar prestado: |=======|\n");
+  printf("Escribe el slot al que pertenezca:\n");
+  size_t id=1;
+  lista_con_cada_elemento(pokemones, imprimir_pokemon_lista, (void*)&id);
+  size_t slot;
+  do{
+    scanf("%zu", &slot);
+  } while(slot < 1 || slot > MAX_POKEMONES_COMBATE+1);
+  return (pokemon_t*)lista_elemento_en_posicion(pokemones, slot-1);
+}
+
+void tomar_pokemon_prestado(partida_t* partida){
+  gimnasio_t* gimnasio = heap_raiz(partida->gimnasios);
+  pokemon_t* nuevo_pokemon = calloc(1, sizeof(pokemon_t));
+  if(!nuevo_pokemon)
+    return;
+  pokemon_t* pokemon_prestado = elegir_pokemon_del_lider(gimnasio->lider.pokemones);
+  *nuevo_pokemon = *pokemon_prestado;
+  arbol_insertar(partida->personaje.pokemones_reserva, nuevo_pokemon);
+  system("clear");
+  printf("\tExito al agregar dicho pokemon. Puedes verlo en tus pokemones de reserva\n");
+}
+
+void menu_victoria(partida_t* partida, bool puede_tomar_prestado){
+  printf("|====| Menú de victoria |======|\n\n");
+  printf("\t¡Gimnasio derrotado!\n");
+  printf("Enhorabuena, añadiste una medalla a tu colección.\n");
+  printf("|*| Ingrese alguna de las siguientes opciones:\n");
+  if(puede_tomar_prestado)
+    printf("\tT: Tomar un pokemon del Lider como recompensa\n");
+  printf("\tC: Cambiar los pokemones de batalla\n");
+  printf("\tN: Avanzar al proximo gimnasio\n");
+  char caracter;
+  do
+  {
+    caracter = (char)getchar();
+    switch(caracter)
+    {
+      case TOMAR_PRESTADO:
+        if(puede_tomar_prestado){
+          tomar_pokemon_prestado(partida);
+          menu_victoria(partida, false);
+        }
+        else
+          caracter = ENTER;
+      break;
+      case CAMBIAR_POKEMONES:
+        cambiar_pokemones(partida);
+        menu_victoria(partida, puede_tomar_prestado);
+      break;
+      case AVANZAR:
+        heap_extraer_raiz(partida->gimnasios);
+      break;
+      default:
+        caracter = ENTER;
+      break;
+    }
+  } while(caracter == ENTER);
+}
+
+int menu_derrota(partida_t* partida){
+  printf("|====| Menú de derrota |======|\n\n");
+  printf("\tLa proxima tal vez :(\n");
+  printf("Puedes volver a intentarlo, pero antes...\n");
+  printf("|*| Ingrese alguna de las siguientes opciones:\n");
+  printf("\tC: Cambiar los pokemones de batalla\n");
+  printf("\tR: Volver al menú gimnasio\n");
+  printf("\tF: Finalizar partida (rendirse)\n");
+  char caracter;
+  do
+  {
+    caracter = (char)getchar();
+    switch(caracter)
+    {
+      case CAMBIAR_POKEMONES:
+        cambiar_pokemones(partida);
+        return menu_derrota(partida);
+      break;
+      case CARACTER_VOLVER:
+        system("clear");
+      break;
+      case CARACTER_FINALIZAR:
+        //
+      break;
+      default:
+        caracter = ENTER;
+      break;
+    }
+  } while(caracter == ENTER);
+  return ((caracter == CARACTER_VOLVER) ? VOLVER_GIMNASIO : FINALIZAR_PARTIDA);
+}
+
+void mostrar_mensaje_final(partida_t* partida){
+  system("clear");
+  printf("Felicidades %s, de verdad que has demostrado tu poder. Llegaste al final de la aventura\n", partida->personaje.nombre);
+  printf("\t¡Te has transformado en Maestro Pokemon!\n");
+  printf("Esperamos que te hayas divertido.\n");
+}
+
+void mostrar_derrota_simulada(partida_t* partida){
+  system("clear");
+  gimnasio_t* gimnasio = heap_raiz(partida->gimnasios);
+  printf("Que lastima %s\n", partida->personaje.nombre);
+  printf("Parece que has perdido en el gimnasio %s\n", gimnasio->nombre);
+  printf("Pokemones que utilizaste:\n");
+  size_t id=1;
+  lista_con_cada_elemento(partida->personaje.pokemones_combate, imprimir_pokemon_lista, (void*)&id);
+  printf("Más suerte la proxima :)\n");
+}
+
 void menu_gimnasio(partida_t* partida){
+  if(heap_raiz(partida->gimnasios) == NULL){
+    mostrar_mensaje_final(partida);
+    return;
+  }
+  if(partida->simulacion){
+    int resultado = batallar(partida);
+    if(resultado == GANO){
+      heap_extraer_raiz(partida->gimnasios);
+      menu_gimnasio(partida);
+    }
+    else
+      mostrar_derrota_simulada(partida);
+    return;
+  }
   printf("|====| Bienvenido al menú de gimnasio |======|\n\n");
   printf("|*| Ingrese alguna de las siguientes opciones:\n");
   printf("\tE: Ver al entrenador principal junto a sus pokemones\n");
@@ -108,14 +243,24 @@ void menu_gimnasio(partida_t* partida){
         cambiar_pokemones(partida);
         menu_gimnasio(partida);
       break;
-      case BATALLAR:
+      case BATALLAR:{
         int resultado = batallar(partida);
+        if(resultado == GANO){
+          menu_victoria(partida, true);
+          menu_gimnasio(partida);
+        }
+        else{
+          int continuacion = menu_derrota(partida);
+          if(continuacion == VOLVER_GIMNASIO)
+            menu_gimnasio(partida);
+        }
       break;
+      }
       case SALIR_PARTIDA:
-      caracter = SALIR;
+        caracter = SALIR;
       break;
       default:
-      caracter = ENTER;
+        caracter = ENTER;
       break;
     }
   } while(caracter == ENTER);

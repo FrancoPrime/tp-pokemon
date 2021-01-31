@@ -55,10 +55,12 @@ typedef struct personaje{
 typedef struct partida{
   heap_t* gimnasios;
   personaje_t personaje;
+  bool simulacion;
 } partida_t;
 
 void jugar();
 void destruir_pokemon(void* pokemon);
+bool destructor_pokemon_lista(void* pokemon, void* contexto);
 int comparar_pokemones(void* primero, void* segundo);
 void destruir_gimnasio(void* gimnasio);
 int comparar_gimnasios(void* primero, void* segundo);

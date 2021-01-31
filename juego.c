@@ -72,12 +72,13 @@ void inicializar_partida(partida_t* partida){
     free(gimnasios);
     free(partida->personaje.pokemones_combate);
   }
+  partida->simulacion = false;
 }
 
 void destruir_partida(partida_t* partida){
-arbol_destruir(partida->personaje.pokemones_reserva);
-lista_destruir(partida->personaje.pokemones_combate);
-heap_destruir(partida->gimnasios);
+  arbol_destruir(partida->personaje.pokemones_reserva);
+  lista_destruir(partida->personaje.pokemones_combate);
+  heap_destruir(partida->gimnasios);
 }
 
 void jugar(){
@@ -90,7 +91,8 @@ void jugar(){
     menu_gimnasio(&partida);
   }
   else if(accion == SIMULAR){
-
+    partida.simulacion = true;
+    menu_gimnasio(&partida);
   }
   destruir_partida(&partida);
 }
