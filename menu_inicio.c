@@ -20,6 +20,8 @@
 
 #define MAX_NOMBRE 100
 
+//Pre: Recibe un mensaje
+//Post: Solicita una ruta de archivo con dicho mensaje y devuelve dicho archivo abierto
 FILE* leer_archivo(char* mensaje){
   char nombre_archivo[MAX_NOMBRE_ARCHIVO];
   printf("%s", mensaje);
@@ -30,6 +32,8 @@ FILE* leer_archivo(char* mensaje){
   return archivo;
 }
 
+//Pre: Recibe un gimnasio y una linea con información de un entrenador
+//Post: Añade a dicho entrenador al gimnasio
 entrenador_t* agregar_entrenador(gimnasio_t* gim, char* linea)
 {
   entrenador_t* entrenador = calloc(1, sizeof(entrenador_t));
@@ -52,6 +56,8 @@ entrenador_t* agregar_entrenador(gimnasio_t* gim, char* linea)
   return entrenador;
 }
 
+//Pre: Recibe una linea con información de un pokemon
+//Post: Crea un pokemon en el heap con dicha información y devuelve un puntero a éste.
 pokemon_t* agregar_pokemon(char* linea)
 {
   pokemon_t* pokemon = calloc(1, sizeof(pokemon_t));
@@ -71,6 +77,8 @@ pokemon_t* agregar_pokemon(char* linea)
   return pokemon;
 }
 
+//Pre: Recibe un archivo y un string.
+//Post: Lee la siguiente linea y escribe la información que encuentra en ella en el string.
 int leer_nombre_personaje(FILE* archivo, char nombre[MAX_NOMBRE], char letra_id){
   char buffer[1024];
   char* linea = fgets(buffer, 1024, archivo);
@@ -92,6 +100,8 @@ int leer_nombre_personaje(FILE* archivo, char nombre[MAX_NOMBRE], char letra_id)
   return ERROR;
 }
 
+//Pre: Recibe un archivo
+//Post: Lee la linea y la redirige a otra función
 pokemon_t* pokemon_leer_de_archivo(FILE* archivo){
   char buffer[1024];
   char* linea = fgets(buffer, 1024, archivo);
@@ -102,6 +112,8 @@ pokemon_t* pokemon_leer_de_archivo(FILE* archivo){
   return agregar_pokemon(linea);
 }
 
+//Pre: Recibe un archivo y un puntero a un personaje
+//Post: Lee el archivo y carga secuencialmente los pokemones al personaje
 int leer_pokemones_personaje(FILE* archivo, personaje_t* personaje){
   pokemon_t* un_pokemon;
   while((un_pokemon = pokemon_leer_de_archivo(archivo)) != NULL)
@@ -115,6 +127,8 @@ int leer_pokemones_personaje(FILE* archivo, personaje_t* personaje){
   return EXITO;
 }
 
+//Pre: Recibe un puntero a una partida
+//Post: Solicita un archivo del cual carga la información del personaje principal
 int actualizar_personaje(partida_t* partida){
   FILE* archivo = leer_archivo("Ingrese la ruta del archivo del personaje: ");//fopen("ent.txt", "r");
   if(!archivo){
@@ -155,6 +169,7 @@ int actualizar_personaje(partida_t* partida){
   return EXITO;
 }
 
+//Post: Crea un gimnasio en el heap con su lista de entrenadores y devuelve un puntero a el mismo
 gimnasio_t* crear_gimnasio(){
   gimnasio_t* nuevo_gim = calloc(1, sizeof(gimnasio_t));
   if(!nuevo_gim)
@@ -169,6 +184,8 @@ gimnasio_t* crear_gimnasio(){
   return nuevo_gim;
 }
 
+//Pre: Recibe un archivo y un puntero a un gimnasio
+//Post: Lee la información basica de un gimnasio y la carga en dicho gimnasio
 int leer_informacion_gim(FILE* archivo, gimnasio_t* gim)
 {
   char buffer[1024];
@@ -186,6 +203,9 @@ int leer_informacion_gim(FILE* archivo, gimnasio_t* gim)
   return ERROR;
 }
 
+//Pre: Recibe un puntero a una partida
+//Post: Solicita un archivo. Crea un gimnasio.
+// Lee toda la información del archivo y la carga en el mismo
 int agregar_gimnasio(partida_t* partida){
   FILE* archivo = leer_archivo("Ingrese la ruta del archivo del gimnasio: ");//fopen("gim.txt", "r");
   if(!archivo){
@@ -259,6 +279,8 @@ int agregar_gimnasio(partida_t* partida){
   return EXITO;
 }
 
+//Pre: Recibe un puntero a una partida
+//Post: Redirige al usuario segun la opcion seleccionada
 int menu_inicio(partida_t* partida){
   printf("|-------| Menú de Inicio |-------|\n");
   printf("|*| Opciones:\n");

@@ -1,36 +1,48 @@
 #include "batallas.h"
 #include <string.h>
 
+//Pre: Recibe dos punteros a pokemones
+//Post: Devuelve al ganador, el primero ganara solo si tiene mayor velocidad
 int funcion_batalla_1(void* pkm_1, void* pkm_2){
   pokemon_t* primero = (pokemon_t*)pkm_1;
   pokemon_t* segundo = (pokemon_t*)pkm_2;
   return((primero->velocidad > segundo->velocidad) ? GANO_PRIMERO : GANO_SEGUNDO);
 }
 
+//Pre: Recibe dos punteros a pokemones
+//Post: Devuelve al ganador, el primero ganara solo si tiene mayor defensa
 int funcion_batalla_2(void* pkm_1, void* pkm_2){
   pokemon_t* primero = (pokemon_t*)pkm_1;
   pokemon_t* segundo = (pokemon_t*)pkm_2;
   return((primero->defensa > segundo->defensa) ? GANO_PRIMERO : GANO_SEGUNDO);
 }
 
+//Pre: Recibe dos punteros a pokemones
+//Post: Devuelve al ganador, el primero ganara solo si tiene mayor ataque
 int funcion_batalla_3(void* pkm_1, void* pkm_2){
   pokemon_t* primero = (pokemon_t*)pkm_1;
   pokemon_t* segundo = (pokemon_t*)pkm_2;
   return((primero->ataque > segundo->ataque) ? GANO_PRIMERO : GANO_SEGUNDO);
 }
 
+//Pre: Recibe dos punteros a pokemones
+//Post: Devuelve al ganador, el primero ganara solo si su nombre es mayor alfabeticamente
 int funcion_batalla_4(void* pkm_1, void* pkm_2){
   pokemon_t* primero = (pokemon_t*)pkm_1;
   pokemon_t* segundo = (pokemon_t*)pkm_2;
   return((strcmp(primero->nombre, segundo->nombre) > 0) ? GANO_PRIMERO : GANO_SEGUNDO);
 }
 
+//Pre: Recibe dos punteros a pokemones
+//Post: Devuelve al ganador, el primero ganara solo si tiene mayor ataque que defensa el segundo
 int funcion_batalla_5(void* pkm_1, void* pkm_2){
   pokemon_t* primero = (pokemon_t*)pkm_1;
   pokemon_t* segundo = (pokemon_t*)pkm_2;
   return((primero->ataque > segundo->defensa) ? GANO_PRIMERO : GANO_SEGUNDO);
 }
 
+//Pre: Recibe un puntero a pokemon
+//Post: Aumenta sus atributos siempre que no excedan el maximo permitido
 void aumentar_estadisticas(pokemon_t* pokemon){
   if(pokemon->velocidad < MAX_PUNTOS_HABILIDADES)
     (pokemon->velocidad)++;
@@ -40,6 +52,8 @@ void aumentar_estadisticas(pokemon_t* pokemon){
     (pokemon->defensa)++;
 }
 
+//Pre: Recibe un puntero a pokemon
+//Post: Imprime la información de dicho pokemon
 void imprimir_pokemon(pokemon_t* pokemon){
   printf("|======================================|\n");
   printf("Información del pokemón\n");
@@ -48,6 +62,8 @@ void imprimir_pokemon(pokemon_t* pokemon){
   printf("|======================================|\n");
 }
 
+//Pre: Recibe un resultado
+//Post: Imprime si ganó o perdió y espera que el usuario ingrese la letra N para continuar
 void mostrar_resultado(int resultado){
   printf("Resultado: ");
   if(resultado == GANO_PRIMERO)
@@ -59,6 +75,8 @@ void mostrar_resultado(int resultado){
   system("clear");
 }
 
+//Pre: Recibe una cola con pokemones aliados, una con enemigos, el id de funcion a utilizar y si es una simulación
+//Post: Realiza las batallas entre ambas colas mostrando los resultados según corresponda. Devuelve el resultado final.
 int pelear_contra_entrenador(lista_t* aliados, lista_t* enemigos, int id_puntero, bool simulacion){
   int (*funcion_batalla[5])(void*, void*);
   funcion_batalla[0] = funcion_batalla_1;
@@ -93,6 +111,8 @@ int pelear_contra_entrenador(lista_t* aliados, lista_t* enemigos, int id_puntero
   return PERDIO;
 }
 
+//Pre: Recibe un puntero a una partida y uno a un gimnasio
+//Post: Realiza los combates entre el personaje principal y los entrenadores del gimnasio. Devuelve el resultado
 int pelear_contra_entrenadores(partida_t* partida, gimnasio_t* gimnasio){
     if(lista_vacia(gimnasio->entrenadores))
       return GANO;
@@ -127,6 +147,8 @@ int pelear_contra_entrenadores(partida_t* partida, gimnasio_t* gimnasio){
     return pelear_contra_entrenadores(partida, gimnasio);
 }
 
+//Pre: Recibe un puntero a la partida y uno a un gimnasio
+//Post: Realiza el combate contra el lider y devuelve el resultado
 int pelear_contra_lider(partida_t* partida, gimnasio_t* gimnasio){
   lista_t* cola_enemigos = lista_crear();
   size_t posicion=0;
@@ -152,6 +174,8 @@ int pelear_contra_lider(partida_t* partida, gimnasio_t* gimnasio){
   return GANO;
 }
 
+//Pre: Recibe un puntero a una partida
+//Post: Pelea contra el gimnasio correspondiente y devuelve el resultado de este intento.
 int batallar(partida_t* partida){
   gimnasio_t* gimnasio = heap_raiz(partida->gimnasios);
   int resultado = pelear_contra_entrenadores(partida, gimnasio);

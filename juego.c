@@ -2,14 +2,18 @@
 #include "menu_inicio.h"
 #include "menu_gimnasio.h"
 
+//Destructor de pokemones para listas
+//Pre: Recibe un puntero void* a un pokemon y un contexto
+//Post: Libera la memoria asociada al pokemon
 bool destructor_pokemon_lista(void* pokemon, void* contexto){
-  contexto = NULL;
   free(pokemon);
   return true;
 }
 
+//Destructor de entrenadores para listas
+//Pre: Recibe un entrenador y un contexto
+//Post: Libera la memoria asociada al entrenador
 bool destructor_entrenador_lista(void* entrenador, void* contexto){
-  contexto = NULL;
   if(entrenador)
     lista_con_cada_elemento(((entrenador_t*)(entrenador))->pokemones, destructor_pokemon_lista, NULL);
   lista_destruir(((entrenador_t*)(entrenador))->pokemones);
@@ -17,23 +21,34 @@ bool destructor_entrenador_lista(void* entrenador, void* contexto){
   return true;
 }
 
+//Destructor de pokemones para arboles
+//Pre: Recibe un puntero void* a un pokemon
+//Post: Libera la memoria asociada al pokemon
 void destruir_pokemon(void* pokemon){
   if(pokemon)
     free(pokemon);
 }
 
+//Pre: Recibe dos punteros a pokemones
+//Post: Compara sus nombres y devuelve un valor > 0 si el primero es más grande alfabeticamente
+//O < 0 en caso contrario
 int comparar_pokemones(void* primero, void* segundo){
   if(!primero || !segundo)
     return 0;
   return(strcmp(((pokemon_t*)(primero))->nombre, ((pokemon_t*)(segundo))->nombre));
 }
 
+//Pre: Recibe dos punteros a gimnasios
+//Pos: Compara sus dificultades, devuelve un valor > 0 si el primero tiene menos dificultad
+//O < 0 en caso contrario
 int comparar_gimnasios(void* primero, void* segundo){
   gimnasio_t* gim_1 = (gimnasio_t*)primero;
   gimnasio_t* gim_2 = (gimnasio_t*)segundo;
   return (int)(gim_2->dificultad - gim_1->dificultad);
 }
 
+//Pre: Recibe un puntero a un gimnasio
+//Post: Libera toda la memoria asociada a dicho gimnasio
 void destruir_gimnasio(void* gimnasio){
   gimnasio_t* gim = (gimnasio_t*)gimnasio;
 
@@ -46,6 +61,7 @@ void destruir_gimnasio(void* gimnasio){
   free(gimnasio);
 }
 
+//Post: Imprime un mensaje de bienvenida
 void mostrar_mensaje_inicial(){
   system("clear");
   printf(ANSI_COLOR_BLUE "|-------| ¡Bienvenido a Aventura Pokemon! |-------|\n");
@@ -66,6 +82,8 @@ void mostrar_mensaje_inicial(){
   printf("                                `'                            '-._|\n");
 }
 
+//Pre: Recibe un puntero a una partida
+//Post: Crea los tdas y reserva la memoria necesaria para iniciar una partida.
 void inicializar_partida(partida_t* partida){
   heap_t* gimnasios = heap_crear(comparar_gimnasios, destruir_gimnasio);
   if(!gimnasios)
@@ -86,12 +104,16 @@ void inicializar_partida(partida_t* partida){
   partida->simulacion = false;
 }
 
+//Pre: Recibe un puntero a una partida
+//Post: Destruye todos los tdas asociados a la partida y libera la memoria utilizada.
 void destruir_partida(partida_t* partida){
   arbol_destruir(partida->personaje.pokemones_reserva);
   lista_destruir(partida->personaje.pokemones_combate);
   heap_destruir(partida->gimnasios);
 }
 
+//Post: Crea una partida. Muestra secuencialmente los menús del juego.
+//Finalmente destruye la partida.
 void jugar(){
   mostrar_mensaje_inicial();
   partida_t partida;

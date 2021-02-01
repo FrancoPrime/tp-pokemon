@@ -13,6 +13,8 @@
 
 #define POKEMON_EN_USO "NO"
 
+//Pre: Recibe un puntero a un pokemon y un contexto con un contador.
+//Post: Imprime al pokemon y sus caracteristicas.
 bool imprimir_pokemon_lista(void* pokemon, void* contexto){
   pokemon_t* pkm = (pokemon_t*)pokemon;
   printf("\t%li-%s Vel: %i Def: %i Att: %i\n", *(size_t*)contexto, pkm->nombre, pkm->velocidad, pkm->defensa, pkm->ataque);
@@ -20,6 +22,8 @@ bool imprimir_pokemon_lista(void* pokemon, void* contexto){
   return true;
 }
 
+//Pre: Recibe un puntero a pokemon a analizar y un pokemon contexto que se busca
+//Post: Si encuentra al pokemon buscado modifica al buscado como POKEMON_EN_USO
 bool busqueda_de_pokemon(void* pokemon, void* contexto){
   if(!contexto)
     return false;
@@ -31,6 +35,8 @@ bool busqueda_de_pokemon(void* pokemon, void* contexto){
   return false;
 }
 
+//Pre: Recibe un puntero a una partida
+//Post: Imprime la información del personaje principal
 void mostrar_entrenador(partida_t* partida){
   system("clear");
   printf("|======| Personaje Principal |========|\n\n");
@@ -44,6 +50,8 @@ void mostrar_entrenador(partida_t* partida){
   system("clear");
 }
 
+//Pre: Recibe un puntero a una partida
+//Post: Imprime la información del gimnasio actual
 void mostrar_gimnasio(partida_t* partida){
   system("clear");
   gimnasio_t* actual = heap_raiz(partida->gimnasios);
@@ -57,6 +65,8 @@ void mostrar_gimnasio(partida_t* partida){
   system("clear");
 }
 
+//Pre: Recibe un puntero a una partida y un pokemon a añadir a la lista de combate
+//Post: En caso de ser posible ingresa al pokemon a la lista de pokemones de combate
 void seleccionar_slot_de_cambio(partida_t* partida, pokemon_t* pokemon){
   system("clear");
   pokemon_t seleccionado = *pokemon;
@@ -82,6 +92,8 @@ void seleccionar_slot_de_cambio(partida_t* partida, pokemon_t* pokemon){
     printf("Error al cambiar pokemones\n");
 }
 
+//Pre: Recibe un puntero a una partida
+//Post: Imprime los pokemones en reserva y llama a incorporar al seleccionado
 void cambiar_pokemones(partida_t* partida){
   system("clear");
   printf("|======| Pokemones en reserva |========|\n");
@@ -109,6 +121,8 @@ void cambiar_pokemones(partida_t* partida){
   seleccionar_slot_de_cambio(partida, pokemon_buscado);
 }
 
+//Pre: Recibe una lista de pokemones
+//Post: Devuelve el pokemon del slot seleccionado por el usuario
 pokemon_t* elegir_pokemon_del_lider(lista_t* pokemones){
   system("clear");
   printf("|========| Elige el pokemon que quieras tomar prestado: |=======|\n");
@@ -122,6 +136,8 @@ pokemon_t* elegir_pokemon_del_lider(lista_t* pokemones){
   return (pokemon_t*)lista_elemento_en_posicion(pokemones, slot-1);
 }
 
+//Pre: Recibe un puntero a una partida
+//Post: Le permite al usuario tomar uno de los pokemones del lider
 void tomar_pokemon_prestado(partida_t* partida){
   gimnasio_t* gimnasio = heap_raiz(partida->gimnasios);
   pokemon_t* nuevo_pokemon = calloc(1, sizeof(pokemon_t));
@@ -134,6 +150,8 @@ void tomar_pokemon_prestado(partida_t* partida){
   printf("\tExito al agregar dicho pokemon. Puedes verlo en tus pokemones de reserva\n");
 }
 
+//Pre: Recibe un puntero a una partida y un bool
+//Post: Redirige al usuario segun la opción del menú seleccionada
 void menu_victoria(partida_t* partida, bool puede_tomar_prestado){
   printf(ANSI_COLOR_GREEN"|====| Menú de victoria |======|\n\n");
   printf("\t¡Gimnasio derrotado!\n" ANSI_COLOR_RESET);
@@ -171,6 +189,8 @@ void menu_victoria(partida_t* partida, bool puede_tomar_prestado){
   } while(caracter == ENTER);
 }
 
+//Pre: Recibe un puntero a una partida
+//Post: Redirige al usuario segun la opción del menú seleccionada
 int menu_derrota(partida_t* partida){
   printf(ANSI_COLOR_RED "|====| Menú de derrota |======|\n\n");
   printf("\tLa proxima tal vez :(\n" ANSI_COLOR_RESET);
@@ -203,6 +223,7 @@ int menu_derrota(partida_t* partida){
   return ((caracter == CARACTER_VOLVER) ? VOLVER_GIMNASIO : FINALIZAR_PARTIDA);
 }
 
+//Post: Muestra el mensaje final una vez ganada la partida
 void mostrar_mensaje_final(partida_t* partida){
   system("clear");
   printf("Felicidades %s, de verdad que has demostrado tu poder. Llegaste al final de la aventura\n", partida->personaje.nombre);
@@ -210,6 +231,7 @@ void mostrar_mensaje_final(partida_t* partida){
   printf("Esperamos que te hayas divertido.\n");
 }
 
+//Post: Muestra el mensaje final cuando se pierde una partida simulada
 void mostrar_derrota_simulada(partida_t* partida){
   system("clear");
   gimnasio_t* gimnasio = heap_raiz(partida->gimnasios);
@@ -221,6 +243,8 @@ void mostrar_derrota_simulada(partida_t* partida){
   printf("Más suerte la proxima :)\n");
 }
 
+//Pre: Recibe un puntero a una partida
+//Post: Redirige al usuario según la opcion que elija, o en caso de ser simulada realiza las batallas
 void menu_gimnasio(partida_t* partida){
   if(heap_raiz(partida->gimnasios) == NULL){
     mostrar_mensaje_final(partida);
