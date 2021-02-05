@@ -91,9 +91,9 @@ int pelear_contra_entrenador(lista_t* aliados, lista_t* enemigos, int id_puntero
     int resultado = funcion_batalla[id_puntero-1]((void*)pokemon_peleando, (void*)pokemon_a_derrotar);
     if(!(simulacion)){
       printf("Tu pokemon:\n");
-      imprimir_pokemon(pokemon_a_derrotar);
-      printf("Pokemon rival:\n");
       imprimir_pokemon(pokemon_peleando);
+      printf("Pokemon rival:\n");
+      imprimir_pokemon(pokemon_a_derrotar);
       mostrar_resultado(resultado);
       system("clear");
     }
@@ -140,7 +140,6 @@ int pelear_contra_entrenadores(partida_t* partida, gimnasio_t* gimnasio){
     lista_destruir(cola_aliados);
     if(resultado == PERDIO)
       return PERDIO;
-    lista_destruir(entrenador->pokemones);
     lista_desapilar(gimnasio->entrenadores);
     return pelear_contra_entrenadores(partida, gimnasio);
 }
@@ -164,6 +163,8 @@ int pelear_contra_lider(partida_t* partida, gimnasio_t* gimnasio){
     posicion++;
     pokemon = lista_elemento_en_posicion(partida->personaje.pokemones_combate, posicion);
   }
+  if(!partida->simulacion)
+    printf("Pelea entre %s y %s:\n", partida->personaje.nombre, gimnasio->lider.nombre);
   int resultado = pelear_contra_entrenador(cola_aliados, cola_enemigos, gimnasio->id_puntero_funcion, partida->simulacion);
   lista_destruir(cola_enemigos);
   lista_destruir(cola_aliados);

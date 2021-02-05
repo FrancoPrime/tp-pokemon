@@ -66,7 +66,7 @@ typedef struct partida{
 
 void jugar();
 void destruir_pokemon(void* pokemon);
-bool destructor_pokemon_lista(void* pokemon, void* contexto);
+void destruir_entrenador(void* entrenador);
 int comparar_pokemones(void* primero, void* segundo);
 void destruir_gimnasio(void* gimnasio);
 int comparar_gimnasios(void* primero, void* segundo);

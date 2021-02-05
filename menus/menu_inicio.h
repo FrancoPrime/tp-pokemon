@@ -1,6 +1,6 @@
 #ifndef _INICIO_H_
 #define _INICIO_H_
-#include "juego.h"
+#include "../juego.h"
 
 #define MAX_NOMBRE_ARCHIVO 100
 

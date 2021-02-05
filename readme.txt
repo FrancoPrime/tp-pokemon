@@ -12,6 +12,7 @@ ver la dificultad del gimnasio contra el cual lucharás.
 Por cada combate que tus pokemones ganen incrementarán sus habilidades hasta un máximo posible de 63 puntos.
 
 El juego te guiará mediante menús en los cuales decidirás como deseas avanzar. En un principio, se te pedirá que cargues la información de la partida tal como tu personaje principal y los gimnasios disponibles.
+Puedes crear tus propios archivos de gimnasios y entrenador. El juego trae los archivos entrenador.txt y gimnasios.txt como prueba.
 
 -Compilación-
 

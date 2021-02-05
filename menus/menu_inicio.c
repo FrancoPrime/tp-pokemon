@@ -12,6 +12,7 @@
 #define ID_LIDER 'L'
 #define ID_ENTRENADOR 'E'
 #define ID_POKEMON 'P'
+#define ID_GIMNASIO 'G'
 
 #define ACTUALIZAR_PERSONAJE 'E'
 #define AGREGA_GIMNASIO 'A'
@@ -205,22 +206,21 @@ int leer_informacion_gim(char* linea, gimnasio_t* gim)
 // Lee toda la información del archivo y la carga en el mismo
 int agregar_gimnasio(partida_t* partida, FILE* archivo, char* linea_informacion_gimnasio){
   gimnasio_t* nuevo_gim = crear_gimnasio();
-  if(!nuevo_gim){
-    fclose(archivo);
+  if(!nuevo_gim)
+  {
+    printf("Hola");
     return ERROR;
   }
 
   if(leer_informacion_gim(linea_informacion_gimnasio, nuevo_gim) == ERROR){
     printf("Información corrupta\n");
     destruir_gimnasio(nuevo_gim);
-    fclose(archivo);
     return ERROR;
   }
 
  if(leer_nombre_personaje(archivo, (nuevo_gim->lider.nombre), ID_LIDER) == ERROR){
     printf("No se encontró al lider del gimnasio\n");
     destruir_gimnasio(nuevo_gim);
-    fclose(archivo);
     return ERROR;
   }
 
@@ -229,7 +229,6 @@ int agregar_gimnasio(partida_t* partida, FILE* archivo, char* linea_informacion_
   if(!entrenador_actual->pokemones)
   {
     destruir_gimnasio(nuevo_gim);
-    fclose(archivo);
     return ERROR;
   }
 
@@ -256,7 +255,7 @@ int agregar_gimnasio(partida_t* partida, FILE* archivo, char* linea_informacion_
       }
       else if(identificador_linea == ID_GIMNASIO){
         int resultado_nuevo_gim = agregar_gimnasio(partida, archivo, linea);
-        if(!resultado){
+        if(resultado_nuevo_gim == ERROR){
           destruir_gimnasio(nuevo_gim);
           return ERROR;
         }
@@ -269,14 +268,11 @@ int agregar_gimnasio(partida_t* partida, FILE* archivo, char* linea_informacion_
 
   if(lista_vacia(nuevo_gim->lider.pokemones)){
     destruir_gimnasio(nuevo_gim);
-    fclose(archivo);
     return ERROR;
   }
 
   heap_insertar(partida->gimnasios, (void*)nuevo_gim);
-  fclose(archivo);
-  system("clear");
-  printf("Exito al añadir gimnasio/s\n");
+  printf("Exito al añadir gimnasio: %s\n", nuevo_gim->nombre);
   return EXITO;
 }
 
@@ -287,7 +283,10 @@ int leer_archivo_gimnasio(partida_t* partida){
   }
   char buffer[1024];
   char* linea = fgets(buffer, 1024, archivo);
-  return agregar_gimnasio(partida, archivo, linea);
+  system("clear");
+  int resultado = agregar_gimnasio(partida, archivo, linea);
+  fclose(archivo);
+  return resultado;
 }
 
 //Pre: Recibe un puntero a una partida
@@ -310,7 +309,7 @@ int menu_inicio(partida_t* partida){
         return menu_inicio(partida);
       break;
       case AGREGA_GIMNASIO:
-        agregar_gimnasio(partida);
+        leer_archivo_gimnasio(partida);
         return menu_inicio(partida);
       break;
       case COMIENZA_PARTIDA_INTERACTIVA:

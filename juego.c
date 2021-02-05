@@ -5,7 +5,7 @@
 //Destructor de entrenadores para listas
 //Pre: Recibe un entrenador y un contexto
 //Post: Libera la memoria asociada al entrenador
-void destructor_entrenador(void* entrenador){
+void destruir_entrenador(void* entrenador){
   if(entrenador)
     lista_destruir(((entrenador_t*)(entrenador))->pokemones);
   free(entrenador);
