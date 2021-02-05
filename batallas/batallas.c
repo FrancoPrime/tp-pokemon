@@ -117,7 +117,7 @@ int pelear_contra_entrenadores(partida_t* partida, gimnasio_t* gimnasio){
     if(lista_vacia(gimnasio->entrenadores))
       return GANO;
     entrenador_t* entrenador = lista_tope(gimnasio->entrenadores);
-    lista_t* cola_enemigos = lista_crear();
+    lista_t* cola_enemigos = lista_crear(NULL);
     size_t posicion=0;
     pokemon_t* pokemon = lista_elemento_en_posicion(entrenador->pokemones, posicion);
     while(pokemon != NULL){
@@ -125,7 +125,7 @@ int pelear_contra_entrenadores(partida_t* partida, gimnasio_t* gimnasio){
       posicion++;
       pokemon = lista_elemento_en_posicion(entrenador->pokemones, posicion);
     }
-    lista_t* cola_aliados = lista_crear();
+    lista_t* cola_aliados = lista_crear(NULL);
     posicion=0;
     pokemon = lista_elemento_en_posicion(partida->personaje.pokemones_combate, posicion);
     while(pokemon != NULL){
@@ -140,9 +140,7 @@ int pelear_contra_entrenadores(partida_t* partida, gimnasio_t* gimnasio){
     lista_destruir(cola_aliados);
     if(resultado == PERDIO)
       return PERDIO;
-    lista_con_cada_elemento(entrenador->pokemones, destructor_pokemon_lista, NULL);
     lista_destruir(entrenador->pokemones);
-    free(entrenador);
     lista_desapilar(gimnasio->entrenadores);
     return pelear_contra_entrenadores(partida, gimnasio);
 }
@@ -150,7 +148,7 @@ int pelear_contra_entrenadores(partida_t* partida, gimnasio_t* gimnasio){
 //Pre: Recibe un puntero a la partida y uno a un gimnasio
 //Post: Realiza el combate contra el lider y devuelve el resultado
 int pelear_contra_lider(partida_t* partida, gimnasio_t* gimnasio){
-  lista_t* cola_enemigos = lista_crear();
+  lista_t* cola_enemigos = lista_crear(NULL);
   size_t posicion=0;
   pokemon_t* pokemon = lista_elemento_en_posicion(gimnasio->lider.pokemones, posicion);
   while(pokemon != NULL){
@@ -158,7 +156,7 @@ int pelear_contra_lider(partida_t* partida, gimnasio_t* gimnasio){
     posicion++;
     pokemon = lista_elemento_en_posicion(gimnasio->lider.pokemones, posicion);
   }
-  lista_t* cola_aliados = lista_crear();
+  lista_t* cola_aliados = lista_crear(NULL);
   posicion=0;
   pokemon = lista_elemento_en_posicion(partida->personaje.pokemones_combate, posicion);
   while(pokemon != NULL){

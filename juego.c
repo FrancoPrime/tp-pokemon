@@ -1,24 +1,14 @@
 #include "juego.h"
-#include "menu_inicio.h"
-#include "menu_gimnasio.h"
-
-//Destructor de pokemones para listas
-//Pre: Recibe un puntero void* a un pokemon y un contexto
-//Post: Libera la memoria asociada al pokemon
-bool destructor_pokemon_lista(void* pokemon, void* contexto){
-  free(pokemon);
-  return true;
-}
+#include "menus/menu_inicio.h"
+#include "menus/menu_gimnasio.h"
 
 //Destructor de entrenadores para listas
 //Pre: Recibe un entrenador y un contexto
 //Post: Libera la memoria asociada al entrenador
-bool destructor_entrenador_lista(void* entrenador, void* contexto){
+void destructor_entrenador(void* entrenador){
   if(entrenador)
-    lista_con_cada_elemento(((entrenador_t*)(entrenador))->pokemones, destructor_pokemon_lista, NULL);
-  lista_destruir(((entrenador_t*)(entrenador))->pokemones);
+    lista_destruir(((entrenador_t*)(entrenador))->pokemones);
   free(entrenador);
-  return true;
 }
 
 //Destructor de pokemones para arboles
@@ -53,9 +43,7 @@ void destruir_gimnasio(void* gimnasio){
   gimnasio_t* gim = (gimnasio_t*)gimnasio;
 
   if(gimnasio){
-    lista_con_cada_elemento(gim->entrenadores, destructor_entrenador_lista, NULL);
     lista_destruir(gim->entrenadores);
-    lista_con_cada_elemento(gim->lider.pokemones, destructor_pokemon_lista, NULL);
     lista_destruir(gim->lider.pokemones);
   }
   free(gimnasio);
@@ -89,7 +77,7 @@ void inicializar_partida(partida_t* partida){
   if(!gimnasios)
     return;
   partida->gimnasios = gimnasios;
-  partida->personaje.pokemones_combate = lista_crear();
+  partida->personaje.pokemones_combate = lista_crear(NULL);
   if(!partida->personaje.pokemones_combate)
   {
     free(gimnasios);

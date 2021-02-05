@@ -4,6 +4,13 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+/*
+ * Destructor de elementos. Cada vez que un elemento deja el arbol
+ * (arbol_borrar o arbol_destruir) se invoca al destructor pasandole
+ * el elemento.
+ */
+typedef void (*lista_liberar_elemento)(void*);
+
 typedef struct nodo{
     void* elemento;
     struct nodo* siguiente;
@@ -13,6 +20,7 @@ typedef struct lista{
     nodo_t* nodo_inicio;
     nodo_t* nodo_fin;
     size_t cantidad;
+    lista_liberar_elemento destructor;
 }lista_t;
 
 typedef struct lista_iterador{
@@ -24,7 +32,7 @@ typedef struct lista_iterador{
  * Crea la lista reservando la memoria necesaria.
  * Devuelve un puntero a la lista creada o NULL en caso de error.
  */
-lista_t* lista_crear();
+lista_t* lista_crear(lista_liberar_elemento destructor);
 
 /*
  * Inserta un elemento al final de la lista.
@@ -34,7 +42,7 @@ int lista_insertar(lista_t* lista, void* elemento);
 
 /*
  * Inserta un elemento en la posicion indicada, donde 0 es insertar
- * como primer elemento y 1 es insertar luego del primer elemento.  
+ * como primer elemento y 1 es insertar luego del primer elemento.
  * En caso de no existir la posicion indicada, lo inserta al final.
  * Devuelve 0 si pudo insertar o -1 si no pudo.
  */
@@ -48,9 +56,9 @@ int lista_borrar(lista_t* lista);
 
 /*
  * Quita de la lista el elemento que se encuentra en la posición
- * indicada, donde 0 es el primer elemento.  
+ * indicada, donde 0 es el primer elemento.
  * En caso de no existir esa posición se intentará borrar el último
- * elemento.  
+ * elemento.
  * Devuelve 0 si pudo eliminar o -1 si no pudo.
  */
 int lista_borrar_de_posicion(lista_t* lista, size_t posicion);
@@ -63,13 +71,13 @@ int lista_borrar_de_posicion(lista_t* lista, size_t posicion);
  */
 void* lista_elemento_en_posicion(lista_t* lista, size_t posicion);
 
-/* 
+/*
  * Devuelve el último elemento de la lista o NULL si la lista se
  * encuentra vacía.
  */
 void* lista_ultimo(lista_t* lista);
 
-/* 
+/*
  * Devuelve true si la lista está vacía o false en caso contrario.
  */
 bool lista_vacia(lista_t* lista);
@@ -79,13 +87,13 @@ bool lista_vacia(lista_t* lista);
  */
 size_t lista_elementos(lista_t* lista);
 
-/* 
+/*
  * Apila un elemento.
  * Devuelve 0 si pudo o -1 en caso contrario.
  */
 int lista_apilar(lista_t* lista, void* elemento);
 
-/* 
+/*
  * Desapila un elemento.
  * Devuelve 0 si pudo desapilar o -1 si no pudo.
  */
@@ -97,13 +105,13 @@ int lista_desapilar(lista_t* lista);
  */
 void* lista_tope(lista_t* lista);
 
-/* 
+/*
  * Encola un elemento.
  * Devuelve 0 si pudo encolar o -1 si no pudo.
  */
 int lista_encolar(lista_t* lista, void* elemento);
 
-/* 
+/*
  * Desencola un elemento.
  * Devuelve 0 si pudo desencolar o -1 si no pudo.
  */
@@ -124,7 +132,7 @@ void lista_destruir(lista_t* lista);
  * Crea un iterador para una lista. El iterador creado es válido desde
  * el momento de su creación hasta que no haya mas elementos por
  * recorrer o se modifique la lista iterada (agregando o quitando
- * elementos de la lista). 
+ * elementos de la lista).
  *
  * Al momento de la creación, el iterador queda listo para devolver el
  * primer elemento utilizando lista_iterador_elemento_actual.
