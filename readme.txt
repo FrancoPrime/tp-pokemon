@@ -39,7 +39,9 @@ menus/Menu_inicio.c = Aquí se colocó todo lo relacionado al menú de inicio y 
 
 menus/Menu_Gimnasio.c = Se encarga de controlar la partida una vez iniciada. Contiene el menú de gimnasio, que permite ver al personaje, ver el gimnasio actual y cambiar pokemones. Se encarga del flujo de batallas, llamando a la función(ubicada en otro archivo) y dependiendo del resultado mostrando el menú de victoria o derrota segun corresponda.
 
-Batallas/batallas.c = Se encarga de la logica de batallas. Se encuntran las funciones de batallas y ejecuta las respectivas peleas dentro de un gimnasio, las mismas son: Batallar contra entrenadores/Batallar contra el Lider. Y dentro de estas la lógica de batallar contra los pokemones correspondientes.
+batallas/batallas.c = Contiene las distintas batallas posibles entre pokemones
+
+batallas/logica_batallas.c = Se encarga de la logica de batallas. Ejecuta las respectivas peleas dentro de un gimnasio, las mismas son: Batallar contra entrenadores/Batallar contra el Lider. Y dentro de estas la lógica de batallar contra los pokemones correspondientes.
 
 -Utilización y explicación del uso de TDAs-
 

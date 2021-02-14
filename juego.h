@@ -9,6 +9,7 @@
 #include "lista/lista.h"
 #include "heap/heap.h"
 #include "batallas/batallas.h"
+#include "batallas/logica_batallas.h"
 
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
@@ -37,6 +38,7 @@ typedef struct pokemon{
   int velocidad;
   int defensa;
   int ataque;
+  int bonificacion;
 } pokemon_t;
 
 typedef struct entrenador{

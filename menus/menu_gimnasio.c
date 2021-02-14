@@ -17,7 +17,7 @@
 //Post: Imprime al pokemon y sus caracteristicas.
 bool imprimir_pokemon_lista(void* pokemon, void* contexto){
   pokemon_t* pkm = (pokemon_t*)pokemon;
-  printf("\t%li-%s Vel: %i Def: %i Att: %i\n", *(size_t*)contexto, pkm->nombre, pkm->velocidad, pkm->defensa, pkm->ataque);
+  printf("\t%li-%s Vel: %i Def: %i Att: %i\n", *(size_t*)contexto, pkm->nombre, pkm->velocidad+pkm->bonificacion, pkm->defensa+pkm->bonificacion, pkm->ataque+pkm->bonificacion);
   (*(size_t*)contexto)++;
   return true;
 }
@@ -76,7 +76,7 @@ void seleccionar_slot_de_cambio(partida_t* partida, pokemon_t* pokemon){
     return;
   }
   printf("Has seleccionado a %s\n", pokemon->nombre);
-  printf("Ahora escribe el numero de slot del pokemon por el cual deseas cambiarlo:\n");
+  printf("Ahora escribe el" ANSI_COLOR_BLUE " numero de slot " ANSI_COLOR_RESET "del pokemon por el cual deseas cambiarlo:\n");
   size_t id=1;
   lista_con_cada_elemento(partida->personaje.pokemones_combate, imprimir_pokemon_lista, (void*)&id);
   size_t slot;
@@ -96,14 +96,14 @@ void seleccionar_slot_de_cambio(partida_t* partida, pokemon_t* pokemon){
 //Post: Imprime los pokemones en reserva y llama a incorporar al seleccionado
 void cambiar_pokemones(partida_t* partida){
   system("clear");
-  printf("|======| Pokemones en reserva |========|\n");
+  printf(ANSI_COLOR_GREEN"|======| Pokemones en reserva |========|\n"ANSI_COLOR_RESET);
   printf("Bienvenido a la pantalla de cambio de pokemones. Aqui abajo se encontrarán los pokemones\n");
-  printf("que usted dispone para cambiar. Igrese el nombre del pokemon que desee agregar:\n");
+  printf("que usted dispone para cambiar. Ingrese el" ANSI_COLOR_BLUE " nombre " ANSI_COLOR_RESET "del pokemon que desee agregar:\n");
   pokemon_t* pkms_reserva[MAX_POKEMONES];
   size_t cantidad = arbol_recorrido_inorden(partida->personaje.pokemones_reserva, (void**)pkms_reserva, MAX_POKEMONES);
   for(size_t i=0;i<cantidad;i++)
   {
-    printf("-%s Vel:%i Def:%i Att:%i\n", pkms_reserva[i]->nombre, pkms_reserva[i]->velocidad, pkms_reserva[i]->defensa, pkms_reserva[i]->ataque);
+    printf("-%s Vel:%i Def:%i Att:%i\n", pkms_reserva[i]->nombre, pkms_reserva[i]->velocidad+pkms_reserva[i]->bonificacion, pkms_reserva[i]->defensa+pkms_reserva[i]->bonificacion, pkms_reserva[i]->ataque+pkms_reserva[i]->bonificacion);
   }
   printf("\nPokemon solicitado: ");
   char linea_leida[120];
@@ -122,17 +122,26 @@ void cambiar_pokemones(partida_t* partida){
 }
 
 //Pre: Recibe una lista de pokemones
-//Post: Devuelve el pokemon del slot seleccionado por el usuario
-pokemon_t* elegir_pokemon_del_lider(lista_t* pokemones){
-  system("clear");
-  printf("|========| Elige el pokemon que quieras tomar prestado: |=======|\n");
-  printf("Escribe el slot al que pertenezca:\n");
+//Post: Solicita un numero y lo devuelve
+size_t slot_del_lider_seleccionado(lista_t* pokemones){
   size_t id=1;
   lista_con_cada_elemento(pokemones, imprimir_pokemon_lista, (void*)&id);
   size_t slot;
   do{
     scanf("%zu", &slot);
   } while(slot < 1 || slot > MAX_POKEMONES_COMBATE+1);
+  return slot;
+}
+
+//Pre: Recibe una lista de pokemones
+//Post: Devuelve el pokemon del slot seleccionado por el usuario
+pokemon_t* elegir_pokemon_del_lider(lista_t* pokemones){
+  system("clear");
+  printf("|========| Elige el pokemon que quieras tomar prestado: |=======|\n");
+  printf("Escribe el" ANSI_COLOR_BLUE " numero de slot " ANSI_COLOR_RESET "al que pertenezca:\n");
+
+  size_t slot = slot_del_lider_seleccionado(pokemones);
+
   return (pokemon_t*)lista_elemento_en_posicion(pokemones, slot-1);
 }
 

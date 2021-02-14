@@ -207,27 +207,21 @@ int leer_informacion_gim(char* linea, gimnasio_t* gim)
 int agregar_gimnasio(partida_t* partida, FILE* archivo, char* linea_informacion_gimnasio){
   gimnasio_t* nuevo_gim = crear_gimnasio();
   if(!nuevo_gim)
-  {
-    printf("Hola");
     return ERROR;
-  }
 
   if(leer_informacion_gim(linea_informacion_gimnasio, nuevo_gim) == ERROR){
-    printf("Información corrupta\n");
     destruir_gimnasio(nuevo_gim);
     return ERROR;
   }
 
  if(leer_nombre_personaje(archivo, (nuevo_gim->lider.nombre), ID_LIDER) == ERROR){
-    printf("No se encontró al lider del gimnasio\n");
     destruir_gimnasio(nuevo_gim);
     return ERROR;
   }
 
   entrenador_t* entrenador_actual = &(nuevo_gim->lider);
   entrenador_actual->pokemones = lista_crear(destruir_pokemon);
-  if(!entrenador_actual->pokemones)
-  {
+  if(!entrenador_actual->pokemones){
     destruir_gimnasio(nuevo_gim);
     return ERROR;
   }
@@ -276,17 +270,20 @@ int agregar_gimnasio(partida_t* partida, FILE* archivo, char* linea_informacion_
   return EXITO;
 }
 
-int leer_archivo_gimnasio(partida_t* partida){
+//Pre: Recibe la partida
+//Post: Añade los gimnasios del archivo solicitado
+void leer_archivo_gimnasio(partida_t* partida){
   FILE* archivo = leer_archivo("Ingrese la ruta del archivo del gimnasio: ");//fopen("gim.txt", "r");
   if(!archivo){
-    return ERROR;
+    return;
   }
   char buffer[1024];
   char* linea = fgets(buffer, 1024, archivo);
   system("clear");
   int resultado = agregar_gimnasio(partida, archivo, linea);
   fclose(archivo);
-  return resultado;
+  if(resultado == ERROR)
+    printf("Ha ocurrido un error al cargar este gimnasio\n");
 }
 
 //Pre: Recibe un puntero a una partida
