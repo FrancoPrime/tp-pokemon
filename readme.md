@@ -1,6 +1,6 @@
-=Aventura Pokemon=
+# Aventura Pokemon
 
--¿Qué es?-
+## ¿Qué es?
 
 Es un juego de terminal hecho en C, basado en la popular franquicia animé llamada "Pokémon". En el mismo podrás batallar con los distintos entrenadores y consagrarte Maestro Pokemon al derrotar todos los gimnasios disponibles. Una vez que derrotes el gimnasio, podrás tomar prestado uno de los pokemones del lider y guardarlo en tus pokemones de reserva.
 
@@ -14,7 +14,7 @@ Por cada combate que tus pokemones ganen incrementarán sus habilidades hasta un
 El juego te guiará mediante menús en los cuales decidirás como deseas avanzar. En un principio, se te pedirá que cargues la información de la partida tal como tu personaje principal y los gimnasios disponibles.
 Puedes crear tus propios archivos de gimnasios y entrenador. El juego trae los archivos entrenador.txt y gimnasios.txt como prueba.
 
--Compilación-
+## Compilación
 
 Para compilar el proyecto se utilizará la linea
 $ make aventura
@@ -25,11 +25,11 @@ $ ./aventura
 Para realizar pruebas de memoria y verificar que no hay pérdidas de la misma, se utilizará la linea
 $ make valgrind
 
--Implementación-
+## Implementación
 
 El juego se realizó en el lenguaje C como aplicación de consola. Se utilizaron los distintos TDAs aprendidos a lo largo de la cursada.
 
--Estructura y organización-
+## Estructura y organización
 
 Los archivos del juego se encuentran en la carpeta principal. Siendo:
 
@@ -43,7 +43,7 @@ batallas/batallas.c = Contiene las distintas batallas posibles entre pokemones
 
 batallas/logica_batallas.c = Se encarga de la logica de batallas. Ejecuta las respectivas peleas dentro de un gimnasio, las mismas son: Batallar contra entrenadores/Batallar contra el Lider. Y dentro de estas la lógica de batallar contra los pokemones correspondientes.
 
--Utilización y explicación del uso de TDAs-
+## Utilización y explicación del uso de TDAs
 
 Las estructuras utilizadas fueron: Lista, Cola, Pila, Arbol binario de busqueda, Heap
 
@@ -56,7 +56,3 @@ Lista: La lista fue utilizada para guardar los pokemones de combate del personaj
 Cola: La cola se utiliza dentro de los combates, en donde las listas de combate de pokemones se trasladan a una cola y se van desencolando a medida que los distintos pokemones pierden el combate.
 
 Pila: La pila se utiliza adentro del gimnasio, para ir almacenando a los entrenadores que le pertenecen al mismo. Esto se debe a que el último entrenador leído del archivo es el primero al cual se debe enfrentar el usuario, y que una vez derrotado dicho entrenador, el usuario no debe volver a enfrentarse a éste por lo cual puede ser removido.
-
--Modificaciones de TDAs-
-
-Se decidió añadirle un destructor al TDA Lista con el fin de hacer más sencilla la liberación de memoria almacenada en la misma.
